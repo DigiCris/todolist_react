@@ -1,0 +1,8 @@
+.content
+{
+  width: 40%;
+  min-width: 200px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: lightgrey;
+}
