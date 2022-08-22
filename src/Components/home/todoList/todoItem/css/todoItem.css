@@ -24,3 +24,8 @@
 {
     float: right;
 }
+
+.TodoItem-complete
+{
+    text-decoration: line-through;
+}

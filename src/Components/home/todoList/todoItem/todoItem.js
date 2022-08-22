@@ -15,7 +15,7 @@ function TodoItem(props)
 
     return(
         <li className="TodoItem">
-            <span className="tick" onClick={onComplete}>✔</span> {props.text} <span className="cross" onClick={onDelete}>❎</span>
+            <span className="tick" onClick={onComplete}>✔</span> <span className={props.completed ? 'TodoItem-complete' : undefined} >{props.text}</span> <span className="cross" onClick={onDelete}>❎</span>
         </li>
     );
 }

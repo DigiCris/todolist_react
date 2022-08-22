@@ -1,9 +1,9 @@
 import React from "react";
 
-function TodoCounter()
+function TodoCounter({completedTodos, totalTodos})
 {
     return(
-        <h2> completaste 2 de 3 todos</h2>
+        <h2> Completaste {completedTodos} de {totalTodos}</h2>
     );
 }
 
