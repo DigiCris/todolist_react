@@ -5,12 +5,15 @@ function TodoItem(props)
 {
     function onComplete()
     {
-        alert('Completaste '+props.text);
+        //alert('Completaste '+props.text);
+        //const ComplitedText=props.text;
+        props.onComplete(props.text);
     }
 
     function onDelete()
     {
-        alert('Borraste '+props.text);
+        //alert('Borraste '+props.text);
+        props.onDelete(props.text);
     }
 
     return(

@@ -4,14 +4,14 @@ import './css/todoList.css';
 
 
 
-function TodoList({todos,setTodos})
+function TodoList({todos,setTodos,onComplete, onDelete})
 {
     var i=0;
     return(
             <section className="TodoList">
                 <ul>
                     {todos.map(todo => (
-                        <TodoItem key={todo.text} text={todo.text} completed={todo.completed} />
+                        <TodoItem key={todo.text} text={todo.text} completed={todo.completed} onComplete={onComplete} onDelete={onDelete}/>
                     ))}
                 </ul>
             </section>
