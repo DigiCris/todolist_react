@@ -7,16 +7,46 @@ import {TodoList} from  './Components/home/todoList/todoList';
 import {CreateTodoButton} from  './Components/home/createTodoButton';
 
 
-const defaultTodos = [
-  {text:'Cortar cebolla', completed:false},
-  {text:'Tormar el curso de intro a react', completed:false},
-  {text:'Llorar con la llorona', completed:false}
-];
+
+
+function useLocalStorage(itemName, initialValue)
+{
+  let defaultItems = initialValue;
+
+  if(!localStorage.getItem(itemName))
+  {
+      defaultItems = initialValue; /*[ 
+      {text:'Cortar cebolla', completed:false},
+      {text:'Tormar el curso de intro a react', completed:false},
+      {text:'Llorar con la llorona', completed:false}
+    ];*/
+  }
+  else
+  {
+    defaultItems= JSON.parse(localStorage.getItem(itemName));
+  }
+  const [items,setItems]=React.useState(defaultItems);
+
+  function saveItems(newItems)
+  {
+    setItems(newItems);
+    localStorage.setItem(itemName,JSON.stringify(newItems));
+  }
+
+  return[items, saveItems];
+
+}
+
+
+
 
 function App() {
 
+
   const [searchValue, setSearchValue]=React.useState('');
-  const [todos,setTodos]=React.useState(defaultTodos);
+
+  const [todos, setTodos]=useLocalStorage('MyTodos',[]);
+//todos
 
   const completedTodos=todos.filter( todo => todo.completed==true ).length;
   const totalTodos=todos.length;
@@ -42,6 +72,7 @@ function App() {
     let newTodos=[...searchTodos];
     newTodos[todoIndex].completed=true;
     console.log(newTodos);
+    //saveTodos(newTodos);
     setTodos(newTodos);
   }
 
@@ -51,6 +82,7 @@ function App() {
     let newTodos=[...searchTodos];
     newTodos.splice(todoIndex,1);
     console.log(newTodos);
+    //saveTodos(newTodos);
     setTodos(newTodos);
   }
 
