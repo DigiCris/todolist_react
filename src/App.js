@@ -11,29 +11,53 @@ import {CreateTodoButton} from  './Components/home/createTodoButton';
 
 function useLocalStorage(itemName, initialValue)
 {
-  let defaultItems = initialValue;
+  const [items,setItems]=React.useState(initialValue);
+  const [loading, setLoading]=React.useState(true);
+  const [error, setError]=React.useState(false);
 
-  if(!localStorage.getItem(itemName))
-  {
-      defaultItems = initialValue; /*[ 
-      {text:'Cortar cebolla', completed:false},
-      {text:'Tormar el curso de intro a react', completed:false},
-      {text:'Llorar con la llorona', completed:false}
-    ];*/
-  }
-  else
-  {
-    defaultItems= JSON.parse(localStorage.getItem(itemName));
-  }
-  const [items,setItems]=React.useState(defaultItems);
+  React.useEffect( () => {
+
+    setTimeout( () => {
+
+      try {
+        let defaultItems = initialValue;
+
+        if(!localStorage.getItem(itemName))
+        {
+            defaultItems = initialValue; /*[ 
+            {text:'Cortar cebolla', completed:false},
+            {text:'Tormar el curso de intro a react', completed:false},
+            {text:'Llorar con la llorona', completed:false}
+          ];*/
+          localStorage.setItem(itemName,JSON.stringify(defaultItems));
+        }
+        else
+        {
+          defaultItems= JSON.parse(localStorage.getItem(itemName));
+        }
+        setItems(defaultItems);
+        setLoading(false);       
+      } catch (error) {
+        setError(error);    
+      }
+    } , 2000 );
+  },[]);
+
 
   function saveItems(newItems)
   {
-    setItems(newItems);
-    localStorage.setItem(itemName,JSON.stringify(newItems));
+    try {
+      if(items!=newItems)
+      {
+        setItems(newItems);
+        localStorage.setItem(itemName,JSON.stringify(newItems));      
+      }      
+    } catch (error) {
+      setError(error); 
+    }
   }
 
-  return[items, saveItems];
+  return{items, saveItems, error, loading};
 
 }
 
@@ -45,8 +69,8 @@ function App() {
 
   const [searchValue, setSearchValue]=React.useState('');
 
-  const [todos, setTodos]=useLocalStorage('MyTodos',[]);
-//todos
+  const {items:todos, saveItems:setTodos, error, loading}=useLocalStorage('MyTodos',[]);
+
 
   const completedTodos=todos.filter( todo => todo.completed==true ).length;
   const totalTodos=todos.length;
@@ -86,10 +110,16 @@ function App() {
     setTodos(newTodos);
   }
 
+
   return (
     <div className="content">
       <TodoCounter completedTodos={completedTodos} totalTodos={totalTodos} />
       <TodoSearch searchValue={searchValue} setSearchValue={setSearchValue} />
+
+      {error && <p>Hubo un error al cargar la pagina. vuelve a intentarlo</p>}
+      {loading && <p>Estamos cargando...</p>}
+      {(!loading && !searchTodos.length) && <p>Crea tu primer todo.</p>}
+
       <TodoList todos={searchTodos} setTodos={setTodos} onComplete={completeTodos} onDelete={deleteTodos} />
   <CreateTodoButton />{/**/}
     </div>
